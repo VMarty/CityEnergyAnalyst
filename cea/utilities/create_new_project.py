@@ -11,7 +11,11 @@ import cea.config
 import cea.inputlocator
 from geopandas import GeoDataFrame as Gdf
 from cea.utilities.dbf import dataframe_to_dbf
+from cea.utilities.standarize_coordinates import shapefile_to_WSG_and_UTM, raster_to_WSG_and_UTM
 import shutil
+from osgeo import gdal
+import osr
+
 
 
 __author__ = "Jimeno A. Fonseca"
@@ -31,19 +35,40 @@ def create_new_project(locator, config):
 
     # Local variables
     zone_geometry_path = config.create_new_project.zone
+    district_geometry_path = config.create_new_project.district
+    street_geometry_path = config.create_new_project.streets
     terrain_path = config.create_new_project.terrain
     occupancy_types = config.create_new_project.occupancy_types
 
     #verify files (if they have the columns cea needs) and then save to new project location
-    zone = Gdf.from_file(zone_geometry_path)
+    zone, projection = shapefile_to_WSG_and_UTM(zone_geometry_path)
     try:
         zone_test = zone[COLUMNS_ZONE_GEOMETRY]
     except ValueError:
         print("one or more columns in the input file is not compatible with cea, please ensure the column"+
                         " names comply with:", COLUMNS_ZONE_GEOMETRY)
     else:
+        #apply coordinate system of terrain into zone and save zone to disk.
+        terrain = raster_to_WSG_and_UTM(terrain_path, projection)
         zone.to_file(locator.get_zone_geometry())
-        shutil.copy(terrain_path, locator.get_terrain())
+        driver = gdal.GetDriverByName('GTiff')
+        driver.CreateCopy(locator.get_terrain(), terrain)
+
+    #now create the district file if it does not exist
+    if district_geometry_path == '':
+        print("there is no district file, we proceed to create it based on the geometry of your zone")
+        zone.to_file(locator.get_district_geometry())
+    else:
+        district ,projection = shapefile_to_WSG_and_UTM(district_geometry_path)
+        district.to_file(locator.get_district_geometry())
+
+    #now transfer the streets
+    if street_geometry_path == '':
+        print("there is no street file, optimizaiton of cooling networks wont be possible")
+    else:
+        street , projection = shapefile_to_WSG_and_UTM(street_geometry_path)
+        street.to_file(locator.get_street_network())
+
 
     ## create occupancy file and year file
     zone = Gdf.from_file(zone_geometry_path).drop('geometry', axis=1)
