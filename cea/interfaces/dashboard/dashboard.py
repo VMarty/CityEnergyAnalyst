@@ -9,8 +9,6 @@ import pandas as pd
 import cea.config
 import cea.inputlocator
 
-from cea.plots.variable_naming import COLOR
-
 config = cea.config.Configuration()
 locator = cea.inputlocator.InputLocator(config.scenario)
 
