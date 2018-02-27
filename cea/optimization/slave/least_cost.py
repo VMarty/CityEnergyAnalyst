@@ -427,6 +427,7 @@ def least_cost_main(locator, master_to_slave_vars, solar_features, gv, prices):
                             "E_PVT_to_grid_W": E_PVT_to_grid_W,
                             "E_CHP_to_grid_W": E_CHP_to_grid_W,
                             "E_Furnace_to_grid_W": E_Furnace_to_grid_W,
+                            "E_aux_storage_solar_and_heat_recovery_req_W": E_aux_storage_solar_and_heat_recovery_req_W,
                             "E_consumed_without_buildingdemand_W": E_without_buildingdemand_req_W,
                             "E_from_grid_W": E_from_grid_W
                             })

@@ -60,9 +60,11 @@ class Plots():
                                                   "E_GHP_req_W",
                                                   "E_BaseBoiler_req_W",
                                                   "E_PeakBoiler_req_W",
-                                                  "E_AddBoiler_req_W"]
+                                                  "E_AddBoiler_req_W",
+                                                  "E_aux_storage_solar_and_heat_recovery_req_W",
+                                                  "E_total_req_W"]
         self.analysis_fields_heating_loads = ['Q_DHNf_W']
-        self.analysis_fields_cooling_loads = ['Q_DCNf_W']
+        self.analysis_fields_cooling_loads = ['Q_total_cooling_W']
         self.analysis_fields_heating = ["Q_PVT_to_directload_W",
                                         "Q_SC_to_directload_W",
                                         "Q_server_to_directload_W",
@@ -87,7 +89,8 @@ class Plots():
                                             "E_PV_to_grid_W",
                                             "E_PVT_to_grid_W",
                                             "E_CHP_to_grid_W",
-                                            "E_Furnace_to_grid_W"]
+                                            "E_Furnace_to_grid_W",
+                                            "E_from_grid_W"]
         self.analysis_fields = ['Base_boiler_BG_capacity_W', 'Base_boiler_NG_capacity_W', 'CHP_BG_capacity_W',
                                 'CHP_NG_capacity_W', 'Furnace_dry_capacity_W', 'Furnace_wet_capacity_W',
                                 'GHP_capacity_W', 'HP_Lake_capacity_W', 'HP_Sewage_capacity_W',
