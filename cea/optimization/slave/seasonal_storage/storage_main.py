@@ -103,6 +103,7 @@ def storage_optimization(locator, master_to_slave_vars, gv):
     else:
         storageDeviation1 = (abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
 
+    if storageDeviation1 > 0.0001:
 
         Q_stored_max_needed = np.amax(Q_storage_content_fin_op) - np.amin(Q_storage_content_fin_op)
         V_storage_possible_needed = Q_stored_max_needed * gv.Wh_to_J / (gv.rho_60 * gv.cp * (T_ST_MAX - T_ST_MIN))
@@ -124,6 +125,7 @@ def storage_optimization(locator, master_to_slave_vars, gv):
         else:
             storageDeviation2 = (abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
 
+        if storageDeviation2 > 0.0001:
 
             # third Round optimization
             Q_stored_max_needed_3 = np.amax(Q_storage_content_fin_op2) - np.amin(Q_storage_content_fin_op2)
@@ -148,6 +150,7 @@ def storage_optimization(locator, master_to_slave_vars, gv):
             else:
                 storageDeviation3 = (abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
 
+            if storageDeviation3 > 0.0001:
 
                 # fourth Round optimization - reduce end temperature by rejecting earlier (minimize volume)
                 Q_stored_max_needed_4 = Q_stored_max_needed_3 - (Q_storage_content_fin_op3[-1] - Q_storage_content_fin_op3[0])
@@ -170,6 +173,7 @@ def storage_optimization(locator, master_to_slave_vars, gv):
                 else:
                     storageDeviation4 = (abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
 
+                if storageDeviation4 > 0.0001:
 
                     # fifth Round optimization - minimize volume more so the temperature reaches a T_min + dT_margin
 
@@ -210,6 +214,7 @@ def storage_optimization(locator, master_to_slave_vars, gv):
                     else:
                         storageDeviation5 = (abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
 
+                    if storageDeviation5 > 0.0001:
                         Q_initial = min(Q_disc_seasonstart_opt5[0], Q_storage_content_fin_op5[-1])
 
                         Q_stored_max_needed_6 = float(
