@@ -63,7 +63,7 @@ def evaluation_main(individual, building_names, locator, extraCosts, extraCO2, e
 
     """
     # Check the consistency of the individual or create a new one
-    individual = check_invalid(individual, len(building_names), gv)
+    # individual = check_invalid(individual, len(building_names), gv)
 
     # Initialize objective functions costs, CO2 and primary energy
     costs = extraCosts

@@ -220,7 +220,7 @@ def storage_optimization(locator, master_to_slave_vars, gv):
                         Q_stored_max_needed_6 = float(
                             Q_stored_max_needed_5 - (Q_storage_content_fin_op5[-1] - Q_storage_content_fin_op5[0]))
                         V_storage_possible_needed = Q_stored_max_needed_6 * gv.Wh_to_J / (gv.rho_60 * gv.cp * (T_ST_MAX - T_ST_MIN))
-                        V5 = V_storage_possible_needed  # overwrite V5 on purpose as this is given back in case of a change
+                        V6 = V_storage_possible_needed  # overwrite V5 on purpose as this is given back in case of a change
 
                         # leave initial values as we adjust the final outcome only, give back values from 5th round
 
@@ -233,4 +233,115 @@ def storage_optimization(locator, master_to_slave_vars, gv):
                         InitialStorageContent = float(Q_storage_content_fin_op6[0])
                         FinalStorageContent = float(Q_storage_content_fin_op6[-1])
 
+                        if InitialStorageContent == 0 or FinalStorageContent == 0:  # catch error in advance of having 0 / 0
+                            storageDeviation6 = 0
+                        else:
+                            storageDeviation6 = (abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
 
+                        if storageDeviation6 > 0.0001:
+                            Q_initial = min(Q_disc_seasonstart_opt6[0], Q_storage_content_fin_op6[-1])
+
+                            Q_stored_max_needed_7 = float(
+                                Q_stored_max_needed_6 - (Q_storage_content_fin_op6[-1] - Q_storage_content_fin_op6[0]))
+                            V_storage_possible_needed = Q_stored_max_needed_7 * gv.Wh_to_J / (
+                                    gv.rho_60 * gv.cp * (T_ST_MAX - T_ST_MIN))
+                            V7 = V_storage_possible_needed  # overwrite V5 on purpose as this is given back in case of a change
+
+                            # leave initial values as we adjust the final outcome only, give back values from 5th round
+
+                            Optimized_Data7 = StDesOp.Storage_Design(CSV_NAME, SOLCOL_TYPE, T_initial, Q_initial,
+                                                                     locator,
+                                                                     V_storage_possible_needed, STORE_DATA,
+                                                                     master_to_slave_vars,
+                                                                     P_HP_max, gv)
+                            Q_stored_max_opt7, Q_rejected_fin_opt7, Q_disc_seasonstart_opt7, T_st_max_op7, T_st_min_op7, Q_storage_content_fin_op7, \
+                            T_storage_fin_op7, Q_loss7, mdot_DH_fin7, Q_uncontrollable_fin = Optimized_Data7
+
+                            InitialStorageContent = float(Q_storage_content_fin_op7[0])
+                            FinalStorageContent = float(Q_storage_content_fin_op7[-1])
+
+                            if InitialStorageContent == 0 or FinalStorageContent == 0:  # catch error in advance of having 0 / 0
+                                storageDeviation7 = 0
+                            else:
+                                storageDeviation7 = (
+                                        abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
+
+                            if storageDeviation7 > 0.0001:
+                                Q_initial = min(Q_disc_seasonstart_opt7[0], Q_storage_content_fin_op7[-1])
+
+                                Q_stored_max_needed_8 = float(
+                                    Q_stored_max_needed_7 - (
+                                            Q_storage_content_fin_op7[-1] - Q_storage_content_fin_op7[0]))
+                                V_storage_possible_needed = Q_stored_max_needed_8 * gv.Wh_to_J / (
+                                        gv.rho_60 * gv.cp * (T_ST_MAX - T_ST_MIN))
+                                V8 = V_storage_possible_needed  # overwrite V5 on purpose as this is given back in case of a change
+
+                                # leave initial values as we adjust the final outcome only, give back values from 5th round
+
+                                Optimized_Data8 = StDesOp.Storage_Design(CSV_NAME, SOLCOL_TYPE, T_initial, Q_initial,
+                                                                         locator,
+                                                                         V_storage_possible_needed, STORE_DATA,
+                                                                         master_to_slave_vars,
+                                                                         P_HP_max, gv)
+                                Q_stored_max_opt8, Q_rejected_fin_opt8, Q_disc_seasonstart_opt8, T_st_max_op8, T_st_min_op8, Q_storage_content_fin_op8, \
+                                T_storage_fin_op8, Q_loss8, mdot_DH_fin8, Q_uncontrollable_fin = Optimized_Data8
+
+                                InitialStorageContent = float(Q_storage_content_fin_op8[0])
+                                FinalStorageContent = float(Q_storage_content_fin_op8[-1])
+
+                                if InitialStorageContent == 0 or FinalStorageContent == 0:  # catch error in advance of having 0 / 0
+                                    storageDeviation8 = 0
+                                else:
+                                    storageDeviation8 = (
+                                            abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
+
+                                if storageDeviation8 > 0.0001:
+                                    Q_initial = min(Q_disc_seasonstart_opt8[0], Q_storage_content_fin_op8[-1])
+
+                                    Q_stored_max_needed_9 = float(
+                                        Q_stored_max_needed_8 - (
+                                                Q_storage_content_fin_op8[-1] - Q_storage_content_fin_op8[0]))
+                                    V_storage_possible_needed = Q_stored_max_needed_9 * gv.Wh_to_J / (
+                                            gv.rho_60 * gv.cp * (T_ST_MAX - T_ST_MIN))
+                                    V9 = V_storage_possible_needed  # overwrite V5 on purpose as this is given back in case of a change
+
+                                    # leave initial values as we adjust the final outcome only, give back values from 5th round
+
+                                    Optimized_Data9 = StDesOp.Storage_Design(CSV_NAME, SOLCOL_TYPE, T_initial,
+                                                                             Q_initial,
+                                                                             locator,
+                                                                             V_storage_possible_needed, STORE_DATA,
+                                                                             master_to_slave_vars,
+                                                                             P_HP_max, gv)
+                                    Q_stored_max_opt9, Q_rejected_fin_opt9, Q_disc_seasonstart_opt9, T_st_max_op9, T_st_min_op9, Q_storage_content_fin_op9, \
+                                    T_storage_fin_op9, Q_loss9, mdot_DH_fin9, Q_uncontrollable_fin = Optimized_Data9
+
+                                    InitialStorageContent = float(Q_storage_content_fin_op9[0])
+                                    FinalStorageContent = float(Q_storage_content_fin_op9[-1])
+
+                                    if InitialStorageContent == 0 or FinalStorageContent == 0:  # catch error in advance of having 0 / 0
+                                        storageDeviation9 = 0
+                                    else:
+                                        storageDeviation9 = (
+                                                abs(InitialStorageContent - FinalStorageContent) / FinalStorageContent)
+
+                                    if storageDeviation9 > 0.0001:
+                                        Q_initial = min(Q_disc_seasonstart_opt9[0], Q_storage_content_fin_op9[-1])
+
+                                        Q_stored_max_needed_10 = float(
+                                            Q_stored_max_needed_9 - (
+                                                    Q_storage_content_fin_op9[-1] - Q_storage_content_fin_op9[0]))
+                                        V_storage_possible_needed = Q_stored_max_needed_10 * gv.Wh_to_J / (
+                                                gv.rho_60 * gv.cp * (T_ST_MAX - T_ST_MIN))
+                                        V10 = V_storage_possible_needed  # overwrite V5 on purpose as this is given back in case of a change
+
+                                        # leave initial values as we adjust the final outcome only, give back values from 5th round
+
+                                        Optimized_Data10 = StDesOp.Storage_Design(CSV_NAME, SOLCOL_TYPE, T_initial,
+                                                                                 Q_initial,
+                                                                                 locator,
+                                                                                 V_storage_possible_needed, STORE_DATA,
+                                                                                 master_to_slave_vars,
+                                                                                 P_HP_max, gv)
+                                        Q_stored_max_opt10, Q_rejected_fin_opt10, Q_disc_seasonstart_opt10, T_st_max_op10, T_st_min_op10, Q_storage_content_fin_op10, \
+                                        T_storage_fin_op10, Q_loss10, mdot_DH_fin10, Q_uncontrollable_fin = Optimized_Data10

@@ -157,11 +157,13 @@ def evolutionary_algo_main(locator, building_names, extra_costs, extra_CO2, extr
     if genCP is 0:
         # create population based on the number of individuals in the config file
         pop = toolbox.population(n=config.optimization.initialind)
-
+        valid_pop = []
         # Check the network and update ntwList. ntwList size keeps changing as the following loop runs
         for ind in pop:
             evaluation.checkNtw(ind, ntwList, locator, gv, config)
+            valid_pop.append(evaluation.check_invalid(ind, len(building_names), gv))
 
+        pop[:] = valid_pop
         # Evaluate the initial population
         print "Evaluate initial population"
         ntwList = ntwList[1:]  # done this to remove the first individual in the ntwList as it is an initial value
@@ -471,10 +473,13 @@ def evolutionary_algo_main(locator, building_names, extra_costs, extra_CO2, extr
             mutant = mut.mutFlip(mutant, proba)
             mutant = mut.mutShuffle(mutant, proba)
             offspring.append(mut.mutGU(mutant, proba))
-
+        valid_pop = []
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         for ind in invalid_ind:
             evaluation.checkNtw(ind, ntwList, locator, gv, config)
+            valid_pop.append(evaluation.check_invalid(ind, len(building_names), gv))
+
+        invalid_ind[:] = valid_pop
 
         for i, ind in enumerate(invalid_ind):
             a = objective_function(ind)
