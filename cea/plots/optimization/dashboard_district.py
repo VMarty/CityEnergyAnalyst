@@ -68,14 +68,16 @@ class Plots():
         self.analysis_fields_heating = ["Q_PVT_to_directload_W",
                                         "Q_SC_to_directload_W",
                                         "Q_server_to_directload_W",
+                                        "Q_compair_to_directload_W",
+                                        "Q_from_storage_used_W",
                                         "Q_HPLake_W",
+                                        "Q_HPSew_W",
                                         "Q_GHP_W",
                                         "Q_CHP_W",
                                         "Q_Furnace_W",
                                         "Q_BaseBoiler_W",
                                         "Q_PeakBoiler_W",
-                                        "Q_AddBoiler_W",
-                                        "Q_from_storage_used_W"]
+                                        "Q_AddBoiler_W"]
         self.analysis_fields_heating_storage_charging = ["Q_PVT_to_storage_W",
                                                          "Q_SC_to_storage_W",
                                                          "Q_server_to_storage_W"]

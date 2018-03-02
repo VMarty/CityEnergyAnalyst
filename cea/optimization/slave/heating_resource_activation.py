@@ -26,6 +26,7 @@ def heating_source_activator(Q_therm_req_W, hour, context, mdot_DH_req_kgpers, t
     # print (hour)
     MS_Var = context
     current_source = act_first  # Start with first source, no cost yet
+    Q_therm_req_W_copy = Q_therm_req_W
 
     # Initializing resulting values (necessairy as not all of them are over-written):
     Q_uncovered_W = 0
@@ -57,7 +58,6 @@ def heating_source_activator(Q_therm_req_W, hour, context, mdot_DH_req_kgpers, t
                 Q_HPSew_gen_W = 0.0
                 E_HPSew_req_W = 0.0
                 E_coldsource_HPSew_W = 0.0
-
                 if Q_therm_req_W > MS_Var.HPSew_maxSize:
                     Q_therm_Sew_W = MS_Var.HPSew_maxSize
                     mdot_DH_to_Sew_kgpers = mdot_DH_req_kgpers * Q_therm_Sew_W / Q_therm_req_W.copy()  # scale down the mass flow if the thermal demand is lowered
@@ -67,7 +67,7 @@ def heating_source_activator(Q_therm_req_W, hour, context, mdot_DH_req_kgpers, t
                     mdot_DH_to_Sew_kgpers = float(mdot_DH_req_kgpers.copy())
 
                 HP_Sew_Cost_Data = HPSew_op_cost(mdot_DH_to_Sew_kgpers, tdhsup_K, tdhret_req_K, TretsewArray_K,
-                                                 gv, prices)
+                                                 gv, prices, Q_therm_Sew_W)
                 C_HPSew_el_pure, C_HPSew_per_kWh_th_pure, Q_HPSew_cold_primary_W, Q_HPSew_therm_W, E_HPSew_req_W = HP_Sew_Cost_Data
                 Q_therm_req_W -= Q_HPSew_therm_W
 
