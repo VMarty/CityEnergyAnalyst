@@ -482,9 +482,9 @@ def evolutionary_algo_main(locator, building_names, extra_costs, extra_CO2, extr
         invalid_ind[:] = valid_pop
 
         for i, ind in enumerate(invalid_ind):
-            print (ind)
+            # print (ind)
             a = objective_function(ind)
-            print (ind)
+            # print (ind)
             costs_list_invalid_ind.append(a[0])
             co2_list_invalid_ind.append(a[1])
             prim_list_invalid_ind.append(a[2])
