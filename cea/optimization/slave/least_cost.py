@@ -31,7 +31,7 @@ __status__ = "Production"
 # least_cost main optimization
 # ==============================
 
-def least_cost_main(locator, master_to_slave_vars, solar_features, gv, prices):
+def least_cost_main(locator, master_to_slave_vars, solar_features, gv, prices, ind):
     """
     This function runs the least cost optimization code and returns cost, co2 and primary energy required. \
     On the go, it saves the operation pattern
@@ -404,6 +404,7 @@ def least_cost_main(locator, master_to_slave_vars, solar_features, gv, prices):
                             })
 
     print (MS_Var.configKey)
+    print (ind)
     results.to_csv(locator.get_optimization_slave_heating_activation_pattern(MS_Var.configKey), index=False)
 
     results = pd.DataFrame({"DATE": date,
