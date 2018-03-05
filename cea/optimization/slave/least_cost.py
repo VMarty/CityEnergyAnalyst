@@ -403,6 +403,7 @@ def least_cost_main(locator, master_to_slave_vars, solar_features, gv, prices):
                             "Q_excess_W": Q_excess_W
                             })
 
+    print (MS_Var.configKey)
     results.to_csv(locator.get_optimization_slave_heating_activation_pattern(MS_Var.configKey), index=False)
 
     results = pd.DataFrame({"DATE": date,
