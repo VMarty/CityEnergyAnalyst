@@ -32,7 +32,11 @@ class DemandWriter(object):
                               'Eprof', 'Ecaf', 'Egenf_cs', 'Qgain_app', 'Qgain_light', 'Qgain_pers', 'Qgain_data',
                               'Q_cool_ref', 'Qgain_base',
                               'Qgain_roof', 'Qgain_vent', 'Qgain_wall', 'Qgain_wind', 'I_sol', 'I_rad',
+<<<<<<< HEAD
                               'Qcs_sen', 'q_cs_lat_peop']
+=======
+                              'Qcs_sen_rc', 'q_cs_lat_peop']
+>>>>>>> parent of d11b194c... Merge pull request #1120 from architecture-building-systems/i1070-update-building-energy-balance-dashboard
         else:
             self.load_vars = loads
 

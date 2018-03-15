@@ -46,7 +46,12 @@ def substation_main(locator, total_demand, building_names, gv, Flag):
     for name in building_names:
         buildings.append(pd.read_csv(locator.get_demand_results_folder() + '//' + name + ".csv",
                                      usecols=['Name', 'Thsf_sup_C', 'Thsf_re_C', 'Tcsf_sup_C', 'Tcsf_re_C',
+<<<<<<< HEAD
                                               'Twwf_sup_C', 'Twwf_re_C', 'Qhsf_kWh', 'Qcsf_kWh', 'Qwwf_kWh', 'Qcref_kWh',
+=======
+                                              'Twwf_sup_C', 'Twwf_re_C', 'Qhsf_kWh', 'Qcsf_kWh', 'Qwwf_kWh',
+                                              'Qcref_kWh',
+>>>>>>> parent of d11b194c... Merge pull request #1120 from architecture-building-systems/i1070-update-building-energy-balance-dashboard
                                               'mcphsf_kWperC', 'mcpwwf_kWperC', 'mcpcsf_kWperC',
                                               'Ef_kWh']))
         Ths = np.vectorize(calc_DH_supply)(Ths.copy(), buildings[iteration].Thsf_sup_C.values)
@@ -487,6 +492,10 @@ def calc_DH_supply(t_0, t_1):
     tmax = max(t_0, t_1)
     return tmax
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of d11b194c... Merge pull request #1120 from architecture-building-systems/i1070-update-building-energy-balance-dashboard
 # ============================
 # Test
 # ============================
