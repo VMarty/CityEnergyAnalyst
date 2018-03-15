@@ -3,7 +3,7 @@
 
 from __future__ import division
 import numpy as np
-from cea.demand import control_ventilation_systems, constants
+from cea.demand import control_ventilation_systems
 from cea.utilities import physics
 
 __author__ = "Gabriel Happle"
@@ -19,11 +19,6 @@ __status__ = "Production"
 # THIS SCRIPT IS USED TO CALCULATE ALL VENTILATION PROPERTIES (AIR FLOWS AND THEIR TEMPERATURES)
 # FOR CALCULATION OF THE VENTILATION HEAT TRANSFER H_VE USED IN THE ISO 13790 CALCULATION PROCEDURE
 
-# get values of global variables
-ETA_REC = constants.ETA_REC  # constant efficiency of Heat recovery
-DELTA_P_DIM = constants.DELTA_P_DIM
-H_F = constants.H_F
-
 
 def calc_air_mass_flow_mechanical_ventilation(bpr, tsd, t):
     """
@@ -34,11 +29,8 @@ def calc_air_mass_flow_mechanical_ventilation(bpr, tsd, t):
     Date: 01/2017
 
     :param bpr: Building properties row object
-    :type bpr: cea.demand.thermal_loads.BuildingPropertiesRow
-    :param tsd: Timestep data
-    :type tsd: Dict[str, numpy.ndarray]
+    :param tsd: Time series data dict
     :param t: time step [0..8760]
-    :type t: int
     :return: updates tsd
     """
 
@@ -88,11 +80,8 @@ def calc_air_mass_flow_window_ventilation(bpr, tsd, t):
     Date: 01/2017
 
     :param bpr: Building properties row object
-    :type bpr: cea.demand.thermal_loads.BuildingPropertiesRow
-    :param tsd: Timestep data
-    :type tsd: Dict[str, numpy.ndarray]
+    :param tsd: Time series data dict
     :param t: time step [0..8760]
-    :type t: int
     :return: updates tsd
     """
 
@@ -122,7 +111,14 @@ def calc_air_mass_flow_window_ventilation(bpr, tsd, t):
     return
 
 
-def calc_m_ve_leakage_simple(bpr, tsd):
+def calc_m_ve_leakage():
+    # requires iteration
+    # TODO: code
+    # TODO: documentation
+    return
+
+
+def calc_m_ve_leakage_simple(bpr, tsd, gv):
     """
     Calculates mass flow rate of leakage at time step t according to ventilation control options and
      building systems properties
@@ -133,9 +129,8 @@ def calc_m_ve_leakage_simple(bpr, tsd):
     Date: 01/2017
 
     :param bpr: Building properties row object
-    :type bpr: cea.demand.thermal_loads.BuildingPropertiesRow
-    :param tsd: Timestep data
-    :type tsd: Dict[str, numpy.ndarray]
+    :param tsd: Time series data dict
+    :param gv: globalvars
     :return: updates tsd
     """
 
@@ -146,15 +141,15 @@ def calc_m_ve_leakage_simple(bpr, tsd):
     area_f = bpr.rc_model['Af']
 
     # estimation of infiltration air volume flow rate according to Eq. (3) in DIN 1946-6
-    n_inf = 0.5 * n50 * (DELTA_P_DIM / 50) ** (2 / 3)  # [air changes per hour] m3/h.m2
-    infiltration = H_F * area_f * n_inf * 0.000277778  # m3/s
+    n_inf = 0.5 * n50 * (gv.delta_p_dim/50) ** (2/3)  # [air changes per hour] m3/h.m2
+    infiltration = gv.hf * area_f * n_inf * 0.000277778  # m3/s
 
     tsd['m_ve_inf'] = infiltration * physics.calc_rho_air(tsd['T_ext'][:])  # (kg/s)
 
     return
 
 
-def calc_theta_ve_mech(bpr, tsd, t):
+def calc_theta_ve_mech(bpr, tsd, t, gv):
     """
     Calculates supply temperature of mechanical ventilation system according to ventilation control options and
      building systems properties
@@ -163,19 +158,19 @@ def calc_theta_ve_mech(bpr, tsd, t):
     Date: 01/2017
 
     :param bpr: Building properties row object
-    :type bpr: cea.demand.thermal_loads.BuildingPropertiesRow
-    :param tsd: Timestep data
-    :type tsd: Dict[str, numpy.ndarray]
+    :param tsd: Time series data dict
     :param t: time step [0..8760]
-    :type t: int
+    :param gv: globalvars
     :return: updates tsd
     """
 
+    eta_rec = gv.nrec_N  # constant efficiency of Heat recovery
+
     if control_ventilation_systems.is_mechanical_ventilation_heat_recovery_active(bpr, tsd, t):
 
-        theta_eta_rec = tsd['T_int'][t-1]
+        theta_eta_rec = tsd['T_int'][t-1] if not np.isnan(tsd['T_int'][t-1]) else tsd['T_ext'][t-1]
 
-        theta_ve_mech = tsd['T_ext'][t] + ETA_REC * (theta_eta_rec - tsd['T_ext'][t])  # TODO: some HEX formula
+        theta_ve_mech = tsd['T_ext'][t] + eta_rec * (theta_eta_rec - tsd['T_ext'][t])  # TODO: some HEX formula
 
     # if no heat recovery: theta_ve_mech = theta_ext
     elif not control_ventilation_systems.is_mechanical_ventilation_heat_recovery_active(bpr, tsd, t):
@@ -192,18 +187,19 @@ def calc_theta_ve_mech(bpr, tsd, t):
     return
 
 
-def calc_m_ve_required(tsd):
+def calc_m_ve_required(bpr, tsd):
     """
     Calculate required outdoor air ventilation rate according to occupancy
 
     Author: Legacy
     Date: old
 
-    :param tsd: Timestep data
-    :type tsd: Dict[str, numpy.ndarray]
+    :param bpr: Building properties row object
+    :param tsd: Time series data dict
     :return: updates tsd
     """
 
     tsd['m_ve_required'] = (tsd['ve']/3.6) * physics.calc_rho_air(tsd['T_ext'][:]) * 0.001  # kg/s
 
     return
+
