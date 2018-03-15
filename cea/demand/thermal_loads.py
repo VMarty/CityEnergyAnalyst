@@ -115,6 +115,7 @@ def calc_thermal_loads(building_name, bpr, weather_data, usage_schedules, date, 
         tsd['Qhs_sen_incl_em_ls'] = tsd['Qhs_sen_sys'] + tsd['Qhs_em_ls']
         tsd['Qcs_sen_incl_em_ls'] = tsd['Qcs_sen_sys'] + tsd['Qcs_em_ls']
 
+<<<<<<< HEAD
         # Calc of Qhs_dis_ls/Qcs_dis_ls - losses due to distribution of heating/cooling coils
         Qhs_d_ls, Qcs_d_ls = np.vectorize(sensible_loads.calc_Qhs_Qcs_dis_ls)(tsd['T_int'], tsd['T_ext'],
                                                                               tsd['Qhs_sen_incl_em_ls'],
@@ -152,6 +153,26 @@ def calc_thermal_loads(building_name, bpr, weather_data, usage_schedules, date, 
 
         # calc hot water load
         tsd['mww'], tsd['mcptw'], tsd['Qww'], Qww_ls_st, tsd['Qwwf'], Qwwf_0, Tww_st, Vww, Vw, tsd['mcpwwf'] = hotwater_loads.calc_Qwwf(
+=======
+        # summation
+        # TODO: refactor this stuff and document
+        tsd['Qcsf_lat'] = tsd['Qcs_lat_sys']
+        tsd['Qhsf_lat'] = tsd['Qhs_lat_sys']
+        # Calc requirements of generation systems (both cooling and heating do not have a storage):
+        tsd['Qhs'] = tsd['Qhs_sen_sys']
+        tsd['Qhsf'] = tsd['Qhs'] + tsd['Qhs_em_ls'] + tsd[
+            'Qhs_dis_ls']  # no latent is considered because it is already added a
+        # s electricity from the adiabatic system. --> TODO
+        tsd['Qcs'] = tsd['Qcs_sen_sys'] + tsd['Qcsf_lat']
+        tsd['Qcsf'] = tsd['Qcs'] + tsd['Qcs_em_ls'] + tsd['Qcs_dis_ls']
+
+        # Calculate temperatures of all systems
+        sensible_loads.calc_temperatures_emission_systems(bpr, tsd)
+
+        # calculate hot water load
+        tsd['mww'], tsd['mcptw'], tsd['Qww'], Qww_ls_st, tsd['Qwwf'], Qwwf_0, Tww_st, Vww, Vw, tsd[
+            'mcpwwf'] = hotwater_loads.calc_Qwwf(
+>>>>>>> parent of d11b194c... Merge pull request #1120 from architecture-building-systems/i1070-update-building-energy-balance-dashboard
             bpr.building_systems['Lcww_dis'], bpr.building_systems['Lsww_dis'], bpr.building_systems['Lvww_c'],
             bpr.building_systems['Lvww_dis'], tsd['T_ext'], tsd['T_int'], tsd['Twwf_re'],
             bpr.building_systems['Tww_sup_0'], bpr.building_systems['Y'], gv, schedules,
@@ -159,6 +180,7 @@ def calc_thermal_loads(building_name, bpr, weather_data, usage_schedules, date, 
 
         # calc auxiliary loads
         tsd['Eauxf'], tsd['Eauxf_hs'], tsd['Eauxf_cs'], \
+<<<<<<< HEAD
         tsd['Eauxf_ve'], tsd['Eauxf_ww'], tsd['Eauxf_fw'] = electrical_loads.calc_Eauxf(bpr.geometry['Blength'],
                                                                                         bpr.geometry['Bwidth'],
                                                                                         tsd['mww'], tsd['Qcsf'], Qcsf_0,
@@ -179,6 +201,23 @@ def calc_thermal_loads(building_name, bpr, weather_data, usage_schedules, date, 
                                                                                         bpr.hvac['type_hs'],
                                                                                         tsd['Ehs_lat_aux'],
                                                                                         tsd)
+=======
+        tsd['Eauxf_ve'], tsd['Eauxf_ww'], tsd['Eauxf_fw'] = electrical_loads.calc_Eauxf(tsd, bpr, Qwwf_0, Vw)
+
+        # +++++++++++++++
+        # REAGGREGATE FLOWS AND TEMPERATURES FOR TESTING WITH CURRENT OPTIMIZATION SCRIPT
+        # TODO: remove again
+        tsd['mcphsf'] = tsd['mcphsf_ahu'] + tsd['mcphsf_aru'] + tsd['mcphsf_shu']
+        tsd['mcpcsf'] = tsd['mcpcsf_ahu'] + tsd['mcpcsf_aru'] + tsd['mcpcsf_scu']
+        with np.warnings.catch_warnings():
+            np.warnings.filterwarnings('ignore', r'All-NaN (slice|axis) encountered')
+            tsd['Tcsf_sup'] = np.nanmin([tsd['Tcsf_sup_ahu'],tsd['Tcsf_sup_aru'],tsd['Tcsf_sup_scu']], axis=0)
+            tsd['Tcsf_re'] = np.nanmax([tsd['Tcsf_re_ahu'], tsd['Tcsf_re_aru'], tsd['Tcsf_re_scu']], axis=0)
+            tsd['Thsf_sup'] = np.nanmax([tsd['Thsf_sup_ahu'], tsd['Thsf_sup_aru'], tsd['Thsf_sup_shu']], axis=0)
+            tsd['Thsf_re'] = np.nanmin([tsd['Thsf_re_ahu'], tsd['Thsf_re_aru'], tsd['Thsf_re_shu']], axis=0)
+        tsd['q_cs_lat_peop'] = np.zeros(8760)
+        # ++++++++++++++++
+>>>>>>> parent of d11b194c... Merge pull request #1120 from architecture-building-systems/i1070-update-building-energy-balance-dashboard
 
     elif bpr.rc_model['Af'] == 0:  # if building does not have conditioned area
 
@@ -265,6 +304,7 @@ def calc_water_temperature(T_ambient_C, depth_m):
     ..[Kusuda, T. et al., 1965] Kusuda, T. and P.R. Achenbach (1965). Earth Temperatures and Thermal Diffusivity at
     Selected Stations in the United States. ASHRAE Transactions. 71(1):61-74
     """
+<<<<<<< HEAD
     heat_capacity_soil =  2000 # _[A. Kecebas et al., 2011]
     conductivity_soil =  1.6 # _[A. Kecebas et al., 2011]
     density_soil =  1600 # _[A. Kecebas et al., 2011]
@@ -274,6 +314,42 @@ def calc_water_temperature(T_ambient_C, depth_m):
     e = depth_m * math.sqrt ((math.pi * heat_capacity_soil * density_soil) / (8760 * conductivity_soil)) # soil constants
     Tg = [ (T_avg + ( T_max - T_avg ) * math.exp( -e ) * math.cos ( ( 2 * math.pi * ( i + 1 ) / 8760 ) - e ))-274
            for i in range(8760)]
+=======
+    heat_capacity_soil = 2000  # _[A. Kecebas et al., 2011]
+    conductivity_soil = 1.6  # _[A. Kecebas et al., 2011]
+    density_soil = 1600  # _[A. Kecebas et al., 2011]
+
+    T_max = max(T_ambient_C) + 273.15  # to K
+    T_avg = np.mean(T_ambient_C) + 273.15  # to K
+    e = depth_m * math.sqrt(
+        (math.pi * heat_capacity_soil * density_soil) / (8760 * conductivity_soil))  # soil constants
+    Tg = [(T_avg + (T_max - T_avg) * math.exp(-e) * math.cos((2 * math.pi * (i + 1) / 8760) - e)) - 274
+          for i in range(8760)]
+
+    return Tg  # in C
+
+
+TSD_KEYS_HEATING_LOADS = ['Qhs_sen_rc', 'Qhs_sen_shu', 'Qhs_sen_ahu', 'Qhs_lat_ahu', 'Qhs_sen_aru', 'Qhs_lat_aru',
+                            'Qhs_sen_sys', 'Qhs_lat_sys', 'Qhs_em_ls', 'Qhs_dis_ls', 'Qhsf', 'Qhs', 'Qhsf_lat']
+TSD_KEYS_COOLING_LOADS = ['Qcs_sen_rc', 'Qcs_sen_scu', 'Qcs_sen_ahu', 'Qcs_lat_ahu', 'Qcs_sen_aru', 'Qcs_lat_aru',
+                            'Qcs_sen_sys', 'Qcs_lat_sys', 'Qcs_em_ls', 'Qcs_dis_ls', 'Qcsf', 'Qcs', 'Qcsf_lat']
+TSD_KEYS_HEATING_TEMP = ['ta_re_hs_ahu', 'ta_sup_hs_ahu', 'ta_re_hs_aru', 'ta_sup_hs_aru']
+TSD_KEYS_HEATING_FLOWS = ['ma_sup_hs_ahu', 'ma_sup_hs_aru']
+TSD_KEYS_COOLING_TEMP = ['ta_re_cs_ahu', 'ta_sup_cs_ahu', 'ta_re_cs_aru', 'ta_sup_cs_aru']
+TSD_KEYS_COOLING_FLOWS = ['ma_sup_cs_ahu', 'ma_sup_cs_aru']
+TSD_KEYS_COOLING_SUPPLY_FLOWS = ['mcpcsf_ahu', 'mcpcsf_aru', 'mcpcsf_scu', 'mcpcsf']
+TSD_KEYS_COOLING_SUPPLY_TEMP = ['Tcsf_re_ahu', 'Tcsf_re_aru', 'Tcsf_re_scu', 'Tcsf_sup_ahu', 'Tcsf_sup_aru', 'Tcsf_sup_scu', 'Tcsf_sup', 'Tcsf_re']
+TSD_KEYS_HEATING_SUPPLY_FLOWS = ['mcphsf_ahu', 'mcphsf_aru', 'mcphsf_shu', 'mcphsf']
+TSD_KEYS_HEATING_SUPPLY_TEMP = ['Thsf_re_ahu', 'Thsf_re_aru', 'Thsf_re_shu', 'Thsf_sup_ahu', 'Thsf_sup_aru', 'Thsf_sup_shu', 'Thsf_sup', 'Thsf_re']
+TSD_KEYS_RC_TEMP = ['T_int', 'theta_m', 'theta_c', 'theta_o', 'theta_ve_mech']
+TSD_KEYS_MOISTURE = ['x_int', 'x_ve_inf', 'x_ve_mech', 'g_hu_ld', 'g_dhu_ld']
+TSD_KEYS_VENTILATION_FLOWS = ['m_ve_window', 'm_ve_mech', 'm_ve_rec', 'm_ve_inf', 'm_ve_required']
+TSD_KEYS_ENERGY_BALANCE_DASHBOARD = ['Qgain_light', 'Qgain_app', 'Qgain_pers', 'Qgain_data', 'Q_cool_ref',
+                                       'Qgain_wall', 'Qgain_base',
+                                       'Qgain_roof', 'Qgain_wind', 'Qgain_vent']
+TSD_KEYS_SOLAR = ['I_sol', 'I_rad', 'I_sol_and_I_rad']
+TSD_KEYS_PEOPLE = ['people', 've', 'Qs', 'w_int']
+>>>>>>> parent of d11b194c... Merge pull request #1120 from architecture-building-systems/i1070-update-building-energy-balance-dashboard
 
     return Tg # in C
 
@@ -293,6 +369,7 @@ def initialize_timestep_data(bpr, weather_data):
            'T_sky': weather_data.skytemp_C.values,
            'u_wind': weather_data.windspd_ms}
     # fill data with nan values
+<<<<<<< HEAD
     nan_fields = ['Qhs_lat_sys', 'Qhs_sen_sys', 'Qcs_lat_sys', 'Qcs_sen_sys', 'T_int', 'theta_m', 'theta_c',
                   'theta_o', 'Qhs_sen', 'Qcs_sen', 'Ehs_lat_aux', 'Qhs_em_ls', 'Qcs_em_ls', 'ma_sup_hs', 'ma_sup_cs',
                   'Ta_sup_hs', 'Ta_sup_cs', 'Ta_re_hs', 'Ta_re_cs', 'I_sol_and_I_rad', 'w_int', 'I_rad', 'QEf', 'QHf', 'QCf',
@@ -302,6 +379,35 @@ def initialize_timestep_data(bpr, weather_data):
                   'Tcsf_re', 'Tcdataf_re', 'Tcdataf_sup', 'Tcref_re', 'Tcref_sup', 'theta_ve_mech', 'm_ve_window',
                   'm_ve_mech', 'm_ve_recirculation', 'm_ve_inf', 'I_sol','Qgain_light','Qgain_app','Qgain_pers','Qgain_data','Q_cool_ref',
                   'Qgain_wall', 'Qgain_base', 'Qgain_roof', 'Qgain_wind', 'Qgain_vent','q_cs_lat_peop']
+=======
+
+    nan_fields_electricity = ['Eauxf', 'Eauxf_ve', 'Eauxf_hs', 'Eauxf_cs', 'Eauxf_ww', 'Eauxf_fw', 'Egenf_cs',
+                              'Ehs_lat_aux']
+    nan_fields_water = ['mcpwwf', 'Twwf_re', 'Qwwf', 'Qww']
+    nan_fields = ['QEf', 'QHf', 'QCf',
+                  'Ef',  'Qhprof',
+                   'Tcdataf_re', 'Tcdataf_sup',
+                  'Tcref_re', 'Tcref_sup',
+                  'q_cs_lat_peop']
+    nan_fields.extend(TSD_KEYS_HEATING_LOADS)
+    nan_fields.extend(TSD_KEYS_COOLING_LOADS)
+    nan_fields.extend(TSD_KEYS_HEATING_TEMP)
+    nan_fields.extend(TSD_KEYS_COOLING_TEMP)
+    nan_fields.extend(TSD_KEYS_COOLING_FLOWS)
+    nan_fields.extend(TSD_KEYS_HEATING_FLOWS)
+    nan_fields.extend(TSD_KEYS_COOLING_SUPPLY_FLOWS)
+    nan_fields.extend(TSD_KEYS_COOLING_SUPPLY_TEMP)
+    nan_fields.extend(TSD_KEYS_HEATING_SUPPLY_FLOWS)
+    nan_fields.extend(TSD_KEYS_HEATING_SUPPLY_TEMP)
+    nan_fields.extend(TSD_KEYS_RC_TEMP)
+    nan_fields.extend(TSD_KEYS_MOISTURE)
+    nan_fields.extend(TSD_KEYS_ENERGY_BALANCE_DASHBOARD)
+    nan_fields.extend(TSD_KEYS_SOLAR)
+    nan_fields.extend(TSD_KEYS_VENTILATION_FLOWS)
+    nan_fields.extend(nan_fields_electricity)
+    nan_fields.extend(nan_fields_water)
+    nan_fields.extend(TSD_KEYS_PEOPLE)
+>>>>>>> parent of d11b194c... Merge pull request #1120 from architecture-building-systems/i1070-update-building-energy-balance-dashboard
 
     tsd.update(dict((x, np.zeros(8760) * np.nan) for x in nan_fields))
 
