@@ -162,10 +162,10 @@ class Plots():
                                             "E_Furnace_to_grid_W",
                                                     "E_from_grid_W"]
         self.analysis_fields_electricity_cooling = ["E_CHP_to_directload_W",
-                                                    "E_CHP_to_grid_W",
                                                     "E_PV_to_directload_W",
-                                                    "E_PV_to_grid_W",
-                                                    "E_from_grid_W"]
+                                                    "E_from_grid_W",
+                                                    "E_CHP_to_grid_W",
+                                                    "E_PV_to_grid_W",]
         self.analysis_fields_individual_heating = ['Base_boiler_BG_capacity_W', 'Base_boiler_NG_capacity_W', 'CHP_BG_capacity_W',
                                 'CHP_NG_capacity_W', 'Furnace_dry_capacity_W', 'Furnace_wet_capacity_W',
                                 'GHP_capacity_W', 'HP_Lake_capacity_W', 'HP_Sewage_capacity_W',
@@ -727,28 +727,28 @@ class Plots():
         return plot
 
     def pareto_final_generation(self):
-        title = 'Pareto Curve for Final Generation ' + str(self.generations[-1:][0])
+        title = 'Pareto curve for final generation ' + str(self.generations[-1:][0])
         output_path = self.locator.get_timeseries_plots_file('District_pareto_final_generation')
         data = self.data_processed['final_generation']
         plot = pareto_curve(data, title, output_path)
         return plot
 
     def pareto_final_generation_capacity_installed_heating(self):
-        title = 'Capacity Installed in Final Generation' + str(self.generations[-1:][0])
+        title = 'Capacity installed in final generation' + str(self.generations[-1:][0])
         output_path = self.locator.get_timeseries_plots_file('District_pareto_final_generation_capacity_installed')
         data = self.data_processed['final_generation']
         plot = pareto_capacity_installed(data, self.analysis_fields_individual_heating, self.renewable_sources_fields, title, output_path)
         return plot
 
     def pareto_final_generation_capacity_installed_cooling(self):
-        title = 'Capacity Installed in Final Generation' + str(self.generations[-1:][0])
+        title = 'Capacity installed in final Generation' + str(self.generations[-1:][0])
         output_path = self.locator.get_timeseries_plots_file('District_pareto_final_generation_capacity_installed')
         data = self.data_processed['final_generation']
         plot = pareto_capacity_installed(data, self.analysis_fields_individual_cooling, self.renewable_sources_fields, title, output_path)
         return plot
 
     def individual_heating_activation_curve(self):
-        title = 'Activation curve  for Individual ' + self.individual + " in generation " + str(self.final_generation)
+        title = 'Dispatch curve for configuration ' + self.individual + " in generation " + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file(
             self.individual + '_gen' + str(self.final_generation) + '_heating_activation_curve')
         anlysis_fields_loads = self.analysis_fields_heating_loads
@@ -757,7 +757,7 @@ class Plots():
         return plot
 
     def individual_heating_storage_activation_curve(self):
-        title = 'Storage Activation curve  for Individual ' + self.individual + " in generation " + str(
+        title = 'Storage Dispatch curve for configuration ' + self.individual + " in generation " + str(
             self.final_generation)
         output_path = self.locator.get_timeseries_plots_file(
             self.individual + '_gen' + str(self.final_generation) + '_heating_storage_activation_curve')
@@ -770,7 +770,7 @@ class Plots():
         return plot
 
     def individual_electricity_activation_curve_heating(self):
-        title = 'Activation curve  for Individual ' + self.individual + " in generation " + str(self.final_generation)
+        title = 'Dispatch curve for configuration ' + self.individual + " in generation " + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file(
             self.individual + '_gen' + str(self.final_generation) + '_DH_electricity_activation_curve')
         anlysis_fields_loads = self.analysis_fields_electricity_loads_heating
@@ -780,7 +780,7 @@ class Plots():
         return plot
 
     def individual_electricity_activation_curve_cooling(self):
-        title = 'Activation curve  for Individual ' + self.individual + " in generation " + str(self.final_generation)
+        title = 'Dispatch curve for configuration ' + self.individual + " in generation " + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file(
             self.individual + '_gen' + str(self.final_generation) + '_DC_electricity_activation_curve')
         anlysis_fields_loads = self.analysis_fields_electricity_loads_cooling
@@ -790,7 +790,7 @@ class Plots():
         return plot
 
     def individual_cooling_activation_curve(self):
-        title = 'Activation curve  for Individual ' + self.individual + " in generation " + str(self.final_generation)
+        title = 'Dispatch curve for configuration ' + self.individual + " in generation " + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file(
             self.individual + '_gen' + str(self.final_generation) + '_cooling_activation_curve')
         anlysis_fields_loads = self.analysis_fields_cooling_loads
@@ -799,14 +799,14 @@ class Plots():
         return plot
 
     def cost_analysis_cooling_centralized(self):
-        title = 'Centralized Cost Analysis for generation ' + str(self.final_generation)
+        title = 'Centralized cost analysis for all configurations in generation ' + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file('gen' + str(self.final_generation) + '_DCN_cost_analysis_split')
         data = self.data_processed_cost_centralized
         plot = cost_analysis_curve_centralized(data, self.analysis_fields_cost_cooling_centralized, title, output_path)
         return plot
 
     def cost_analysis_heating_centralized(self):
-        title = 'Centralized Cost Analysis for generation ' + str(self.final_generation)
+        title = 'Centralized cost analysis for all configurations in generation ' + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file('gen' + str(self.final_generation) + '_DHN_cost_analysis_split')
         data = self.data_processed_cost_centralized
         plot = cost_analysis_curve_centralized(data, self.analysis_fields_cost_heating_centralized, title, output_path)
@@ -825,21 +825,21 @@ class Plots():
         return plot
 
     def cost_analysis_cooling(self):
-        title = 'Total District Cost for generation ' + str(self.final_generation)
+        title = 'Total district cost for all configurations in generation ' + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file('gen' + str(self.final_generation) + '_DCN_cost_analysis_total')
         data = self.data_processed_cost_centralized
         plot = cost_analysis_curve_centralized(data, self.analysis_fields_cost_cooling_total, title, output_path)
         return plot
 
     def cost_analysis_heating(self):
-        title = 'Total District Cost for generation ' + str(self.final_generation)
+        title = 'Total district cost for all configurations in generation ' + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file('gen' + str(self.final_generation) + '_DHN_cost_analysis_total')
         data = self.data_processed_cost_centralized
         plot = cost_analysis_curve_centralized(data, self.analysis_fields_cost_heating_total, title, output_path)
         return plot
 
     def cost_analysis_central_decentral(self):
-        title = 'Total Cost for generation ' + str(self.final_generation)
+        title = 'Total cost for all configurations in generation ' + str(self.final_generation)
         output_path = self.locator.get_timeseries_plots_file('gen' + str(self.final_generation) + '_cost_central_vs_decentral')
         data = self.data_processed_cost_centralized
         plot = cost_analysis_curve_centralized(data, self.analysis_fields_cost_central_decentral, title, output_path)

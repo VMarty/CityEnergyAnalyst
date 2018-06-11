@@ -11,8 +11,14 @@ def individual_activation_curve(data_frame, analysis_fields_loads, analysis_fiel
     traces_graph = calc_graph(analysis_fields, analysis_fields_loads, data_frame)
 
     # CREATE FIRST PAGE WITH TIMESERIES
-    layout = go.Layout(images=LOGO, title=title, barmode='relative',
-                       yaxis=dict(title='Power Generated [MWh]', domain=[0.0, 1.0]))
+    layout = dict(images=LOGO, title=title, barmode='relative', yaxis=dict(title='Power Generated [MW]'),
+                    xaxis=dict(rangeselector=dict(buttons=list([
+                    dict(count=1,label='1d',step='day',stepmode='backward'),
+                    dict(count=1,label='1w',step='week',stepmode='backward'),
+                    dict(count=1,label='1m',step='month',stepmode='backward'),
+                    dict(count=6,label='6m',step='month', stepmode='backward'),
+                    dict(count=1,label='1y',step='year',stepmode='backward'),
+                    dict(step='all') ])),rangeslider=dict(),type='date'))
 
     fig = go.Figure(data=traces_graph, layout=layout)
     plot(fig, auto_open=False, filename=output_path)
@@ -22,17 +28,19 @@ def individual_activation_curve(data_frame, analysis_fields_loads, analysis_fiel
 
 def calc_graph(analysis_fields, analysis_fields_loads, data_frame):
     # main data about technologies
-    data = (data_frame / 1000).round(2)  # to kW
+    data = (data_frame / 1000).round(2)  # to MW
     graph = []
     for field in analysis_fields:
         y = data[field].values
-        trace = go.Bar(x=data.index, y=y, name=field, marker=dict(color=COLOR[field]))
+        name = NAMING[field]
+        trace = go.Bar(x=data.index, y=y, name=name, marker=dict(color=COLOR[field]))
         graph.append(trace)
 
     # data about demand
     for field in analysis_fields_loads:
         y = data[field]
-        trace = go.Scatter(x=data.index, y=y, name=field,
+        name = NAMING[field]
+        trace = go.Scatter(x=data.index, y=y, name=name,
                            line=dict(color=COLOR[field], width=1))
 
         graph.append(trace)
