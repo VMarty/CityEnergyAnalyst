@@ -11,7 +11,7 @@ def individual_activation_curve(data_frame, analysis_fields_loads, analysis_fiel
     traces_graph = calc_graph(analysis_fields, analysis_fields_loads, data_frame)
 
     # CREATE FIRST PAGE WITH TIMESERIES
-    layout = dict(images=LOGO, title=title, barmode='relative', yaxis=dict(title='Power Generated [MW]'),
+    layout = dict(images=LOGO, title=title, barmode='relative', yaxis=dict(title='Power Generated [kW]'),
                     xaxis=dict(rangeselector=dict(buttons=list([
                     dict(count=1,label='1d',step='day',stepmode='backward'),
                     dict(count=1,label='1w',step='week',stepmode='backward'),
@@ -28,21 +28,23 @@ def individual_activation_curve(data_frame, analysis_fields_loads, analysis_fiel
 
 def calc_graph(analysis_fields, analysis_fields_loads, data_frame):
     # main data about technologies
-    data = (data_frame / 1000).round(2)  # to MW
+    data = (data_frame / 1000).round(2)  # to kW
     graph = []
     for field in analysis_fields:
         y = data[field].values
-        name = NAMING[field]
-        trace = go.Bar(x=data.index, y=y, name=name, marker=dict(color=COLOR[field]))
-        graph.append(trace)
+        flag_for_unused_technologies = all(v == 0 for v in y)
+        if not flag_for_unused_technologies:
+            trace = go.Bar(x=data.index, y=y, name=NAMING[field], marker=dict(color=COLOR[field]))
+            graph.append(trace)
 
     # data about demand
     for field in analysis_fields_loads:
         y = data[field]
-        name = NAMING[field]
-        trace = go.Scatter(x=data.index, y=y, name=name,
-                           line=dict(color=COLOR[field], width=1))
+        flag_for_unused_technologies = all(v == 0 for v in y)
+        if not flag_for_unused_technologies:
+            trace = go.Scatter(x=data.index, y=y, name=NAMING[field],
+                               line=dict(color=COLOR[field], width=1))
 
-        graph.append(trace)
+            graph.append(trace)
 
     return graph

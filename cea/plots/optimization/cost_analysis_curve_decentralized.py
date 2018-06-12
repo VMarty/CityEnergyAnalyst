@@ -4,7 +4,7 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 import pandas as pd
 import numpy as np
-from cea.plots.variable_naming import LOGO, COLOR
+from cea.plots.variable_naming import LOGO, COLOR, NAMING
 
 
 def cost_analysis_curve_decentralized(data_frame, locator, final_generation, config):
@@ -109,7 +109,9 @@ def calc_graph(analysis_fields, data_frame):
     graph = []
     for i, field in enumerate(analysis_fields):
         y = data[field].values
-        trace = go.Bar(x=data["Building Name"], y=y, name=field, marker=dict(color=COLOR[field]))
-        graph.append(trace)
+        flag_for_unused_technologies = all(v == 0 for v in y)
+        if not flag_for_unused_technologies:
+            trace = go.Bar(x=data["Building Name"], y=y, name=NAMING[field], marker=dict(color=COLOR[field]))
+            graph.append(trace)
 
     return graph
