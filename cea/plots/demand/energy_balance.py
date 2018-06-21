@@ -85,9 +85,8 @@ def calc_monthly_energy_balance(data_frame, normalize_value):
     data_frame['Qhs_tot_sen_kWh'] = data_frame['Qhs_sen_sys_kWh'] + abs(data_frame['Qhs_loss_sen_kWh'])
     data_frame['Qcs_loss_sen_kWh'] = -data_frame['Qcs_em_ls_kWh'] - data_frame['Qcs_dis_ls_kWh']
     data_frame['Qcs_tot_sen_kWh'] = data_frame['Qcs_sen_sys_kWh'] - abs(data_frame['Qcs_loss_sen_kWh'])
-    data_frame['Qcs_tot_lat_kWh'] = -data_frame['Qcs_lat_sys_kWh']  # change sign because this variable is now positive in demand
-
-
+    data_frame['Qcs_tot_lat_kWh'] = -data_frame['Qcs_lat_sys_kWh']
+    # change sign because this variable is now positive in demand
 
     # split up R-C model heat fluxes into heating and cooling contributions
     data_frame['Q_loss_sen_wall_kWh'] = data_frame["Q_gain_sen_wall_kWh"][data_frame["Q_gain_sen_wall_kWh"] < 0]
@@ -110,8 +109,6 @@ def calc_monthly_energy_balance(data_frame, normalize_value):
     data_frame['Q_loss_sen_vent_kWh'].fillna(0, inplace=True)
     data_frame['Q_gain_sen_wind_kWh'].fillna(0, inplace=True)
     data_frame['Q_loss_sen_wind_kWh'].fillna(0, inplace=True)
-
-
 
     # convert to monthly
     data_frame.index = pd.to_datetime(data_frame.index)
