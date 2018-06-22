@@ -23,7 +23,7 @@ __email__ = "cea@arch.ethz.ch"
 __status__ = "Production"
 
 DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), 'default.config')
-CEA_CONFIG = os.path.expanduser('~/cea.config')
+CEA_CONFIG = os.path.expanduser('~/cea-bolie.config')
 
 
 class Configuration(object):
