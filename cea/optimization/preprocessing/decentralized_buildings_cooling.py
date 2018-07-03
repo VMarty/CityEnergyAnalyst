@@ -271,8 +271,8 @@ def disconnected_buildings_cooling_main(locator, building_names, config, prices,
                 # 0: DX
                 DX_operation = dx.calc_DX(mdot_AHU_kgpers[hour], T_sup_AHU_K[hour], T_re_AHU_K[hour])
                 result_AHU[0][7] += lca.ELEC_PRICE * DX_operation  # FIXME: a dummy value to rule out this configuration  # CHF
-                result_AHU[0][8] += lca.EL_TO_CO2 * DX_operation  # FIXME: a dummy value to rule out this configuration  # kgCO2
-                result_AHU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
+                result_AHU[0][8] += lca.EL_TO_CO2 * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # kgCO2
+                result_AHU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
 
                 # 1: VCC
                 VCC_to_AHU_operation = chiller_vapor_compression.calc_VCC(mdot_AHU_kgpers[hour], T_sup_AHU_K[hour],
@@ -364,8 +364,8 @@ def disconnected_buildings_cooling_main(locator, building_names, config, prices,
                 # 0: DX
                 DX_operation = dx.calc_DX(mdot_ARU_kgpers[hour], T_sup_ARU_K[hour], T_re_ARU_K[hour])
                 result_ARU[0][7] += lca.ELEC_PRICE * DX_operation  # FIXME: a dummy value to rule out this configuration  # CHF
-                result_ARU[0][8] += lca.EL_TO_CO2 * DX_operation  # FIXME: a dummy value to rule out this configuration  # kgCO2
-                result_ARU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
+                result_ARU[0][8] += lca.EL_TO_CO2 * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # kgCO2
+                result_ARU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
 
                 # 1: VCC
                 VCC_to_ARU_operation = chiller_vapor_compression.calc_VCC(mdot_ARU_kgpers[hour], T_sup_ARU_K[hour],
@@ -470,8 +470,8 @@ def disconnected_buildings_cooling_main(locator, building_names, config, prices,
                 # 0: DX
                 DX_operation = dx.calc_DX(mdot_SCU_kgpers[hour], T_sup_SCU_K[hour], T_re_SCU_K[hour])
                 result_SCU[0][7] += lca.ELEC_PRICE * DX_operation  # FIXME: a dummy value to rule out this configuration  # CHF
-                result_SCU[0][8] += lca.EL_TO_CO2 * DX_operation  # FIXME: a dummy value to rule out this configuration  # kgCO2
-                result_SCU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
+                result_SCU[0][8] += lca.EL_TO_CO2 * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # kgCO2
+                result_SCU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
 
                 # 1: VCC
                 VCC_to_SCU_operation = chiller_vapor_compression.calc_VCC(mdot_SCU_kgpers[hour], T_sup_SCU_K[hour],
@@ -572,8 +572,8 @@ def disconnected_buildings_cooling_main(locator, building_names, config, prices,
                 # 0: DX
                 DX_operation = dx.calc_DX(mdot_AHU_ARU_kgpers[hour], T_sup_AHU_ARU_K[hour], T_re_AHU_ARU_K[hour])
                 result_AHU_ARU[0][7] += lca.ELEC_PRICE * DX_operation  # FIXME: a dummy value to rule out this configuration  # CHF
-                result_AHU_ARU[0][8] += lca.EL_TO_CO2 * DX_operation  # FIXME: a dummy value to rule out this configuration  # kgCO2
-                result_AHU_ARU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
+                result_AHU_ARU[0][8] += lca.EL_TO_CO2 * DX_operation * 3600E-6   # FIXME: a dummy value to rule out this configuration  # kgCO2
+                result_AHU_ARU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
 
                 # 1: VCC
 
@@ -677,8 +677,8 @@ def disconnected_buildings_cooling_main(locator, building_names, config, prices,
                 # 0: DX
                 DX_operation = dx.calc_DX(mdot_AHU_SCU_kgpers[hour], T_sup_AHU_SCU_K[hour], T_re_AHU_SCU_K[hour])
                 result_AHU_SCU[0][7] += lca.ELEC_PRICE * DX_operation  # FIXME: a dummy value to rule out this configuration  # CHF
-                result_AHU_SCU[0][8] += lca.EL_TO_CO2 * DX_operation  # FIXME: a dummy value to rule out this configuration  # kgCO2
-                result_AHU_SCU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
+                result_AHU_SCU[0][8] += lca.EL_TO_CO2 * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # kgCO2
+                result_AHU_SCU[0][9] += lca.EL_TO_OIL_EQ * DX_operation * 3600E-6   # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
 
                 # 1: VCC
                 VCC_to_AHU_SCU_operation = chiller_vapor_compression.calc_VCC(mdot_AHU_SCU_kgpers[hour],
@@ -780,8 +780,8 @@ def disconnected_buildings_cooling_main(locator, building_names, config, prices,
                 # 0: DX
                 DX_operation = dx.calc_DX(mdot_ARU_SCU_kgpers[hour], T_sup_ARU_SCU_K[hour], T_re_ARU_SCU_K[hour])
                 result_ARU_SCU[0][7] += lca.ELEC_PRICE * DX_operation  # FIXME: a dummy value to rule out this configuration  # CHF
-                result_ARU_SCU[0][8] += lca.EL_TO_CO2 * DX_operation  # FIXME: a dummy value to rule out this configuration  # kgCO2
-                result_ARU_SCU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
+                result_ARU_SCU[0][8] += lca.EL_TO_CO2 * DX_operation * 3600E-6   # FIXME: a dummy value to rule out this configuration  # kgCO2
+                result_ARU_SCU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  * 3600E-6  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
 
                 # 1: VCC
                 VCC_to_ARU_SCU_operation = chiller_vapor_compression.calc_VCC(mdot_ARU_SCU_kgpers[hour],
@@ -923,8 +923,8 @@ def disconnected_buildings_cooling_main(locator, building_names, config, prices,
                 # 0: DX
                 DX_operation = dx.calc_DX(mdot_AHU_ARU_SCU_kgpers[hour], T_sup_AHU_ARU_SCU_K[hour], T_re_AHU_ARU_SCU_K[hour])
                 result_AHU_ARU_SCU[0][7] += lca.ELEC_PRICE * DX_operation  # FIXME: a dummy value to rule out this configuration  # CHF
-                result_AHU_ARU_SCU[0][8] += lca.EL_TO_CO2 * DX_operation  # FIXME: a dummy value to rule out this configuration  # kgCO2
-                result_AHU_ARU_SCU[0][9] += lca.EL_TO_OIL_EQ * DX_operation  # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
+                result_AHU_ARU_SCU[0][8] += lca.EL_TO_CO2 * DX_operation * 3600E-6   # FIXME: a dummy value to rule out this configuration  # kgCO2
+                result_AHU_ARU_SCU[0][9] += lca.EL_TO_OIL_EQ * DX_operation * 3600E-6   # FIXME: a dummy value to rule out this configuration  # MJ-oil-eq
 
                 # 1: VCC (AHU + ARU + SCU) + CT
                 VCC_to_AHU_ARU_SCU_operation = chiller_vapor_compression.calc_VCC(mdot_AHU_ARU_SCU_kgpers[hour],
