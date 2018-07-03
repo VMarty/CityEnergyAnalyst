@@ -27,7 +27,7 @@ PRICE_DX_PER_W = 1.6 #USD FIXME: to be moved to database
 
 def calc_cop_DX(Q_load_W):
 
-    cop = 2.3
+    cop = 1.0
 
     return cop
 
