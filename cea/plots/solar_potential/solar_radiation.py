@@ -4,7 +4,7 @@ from __future__ import print_function
 import plotly.graph_objs as go
 from plotly.offline import plot
 from cea.plots.variable_naming import LOGO, COLOR
-
+print ('test')
 
 def solar_radiation_district(data_frame, analysis_fields, title, output_path):
     # CALCULATE GRAPH
